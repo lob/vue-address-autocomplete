@@ -5,3 +5,19 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 ## Recommended IDE Setup
 
 - [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+
+
+## How to test locally
+
+Run 
+```
+vite build
+npm link
+```
+
+and then in a different project repo you can
+``` 
+run npm link "@lob/vue-address-autocomplete"
+```
+
+At which point you can now test the repo locally 
