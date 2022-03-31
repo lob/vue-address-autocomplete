@@ -1,5 +1,5 @@
 <template>
-  <v-select :options="['Canada', 'United States']"></v-select>
+  <v-select :options="['This is not in a working state yet']"></v-select>
 </template>
 
 <script>

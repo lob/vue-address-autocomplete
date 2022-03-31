@@ -25,8 +25,7 @@ jobs:
           node-version: 14
 
       - run: npm install
-
-      # publishes to NPM using third party tool (more info here https://github.com/JS-DevTools/npm-publish)
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }} 
+      
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
