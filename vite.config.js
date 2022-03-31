@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 const path = require('path')
+import vSelect from 'vue-select'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,12 +11,11 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.js"),
       name: "@lob/vue-address-autocomplete",
       fileName: (format) => `@lob/vue-address-autocomplete.${format}.js`
-
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['vue'],
+      external: ['vue', 'vue-select'],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
@@ -24,5 +25,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue()]
+  plugins: [vue(), vSelect ]
 })
