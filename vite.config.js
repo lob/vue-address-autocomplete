@@ -15,7 +15,7 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['vue', 'vue-select'],
+      external: ['vue'],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
@@ -26,12 +26,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue({
-    template: {
-      compilerOptions: {
-        // treat all tags with a dash as custom elements
-        isCustomElement: (tag) => tag.includes('-')
-      }
-    }
-  }), vSelect ]
+  plugins: [vue(), vSelect ]
 })
