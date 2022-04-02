@@ -1,5 +1,5 @@
 <template>
-  <AddressAutocomplete apiKey="live_f1509d4894ea4b21c4568fb87b6fb21d293" />
+  <AddressAutocomplete apiKey="api_key_here" />
 </template>
 
 <script>
