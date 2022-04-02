@@ -19,6 +19,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "base-64": "^1.0.0",
     "path": "^0.12.7",
     "vue": "^3.2.25"
   },
