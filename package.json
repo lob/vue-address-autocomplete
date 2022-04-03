@@ -18,6 +18,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lob/vue-address-autocomplete.git"
+  },
   "dependencies": {
     "base-64": "^1.0.0",
     "path": "^0.12.7",

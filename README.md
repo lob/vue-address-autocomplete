@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@lob%2Fvue-address-autocomplete.svg)](https://badge.fury.io/js/@lob%2Fvue-address-autocomplete)
+
 # Lob Vue Address Autocomplete Components
 
 ## Features
