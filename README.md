@@ -16,7 +16,7 @@ npm install --save @lob/vue-address-autocomplete
 
 ## Address Autocomplete Search Bar Demo Code 
 
-```jsx
+```javascript
 <template>
   <div>
     <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-		selectItem(item) {
+    selectItem(item) {
 			this.selection = item;
 		},
     addNewSuggestions(suggestedAddresses) {
