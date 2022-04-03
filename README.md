@@ -18,11 +18,11 @@ npm install --save @lob/vue-address-autocomplete
 
 ```jsx
 <template>
-<div>
-  <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
-  <div class="column column-40">
-  <pre><code>{{selection}}</code></pre>
-</div>
+  <div>
+    <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
+    <div class="column column-40">
+      <pre><code>{{selection}}</code></pre>
+    </div>
   </div>
 </template>
 
