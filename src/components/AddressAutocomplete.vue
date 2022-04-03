@@ -1,19 +1,12 @@
 <template>
 	<div class="demo">
-		<h4>Using a strings array</h4>
 		<div class="row">
 			<div class="column column-60">
-				<span class="float-right">
-					<code>({{ addressesFiltered.length }}/{{ addresses.length }})</code>
-				</span>
-				<TypeAhead :items="addresses" :placeholder="options.placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="options.minInputLength" :itemProjection="
+				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="
 						(item) => {
 							return item.label;
 						}
 					" />
-			</div>
-			<div class="column column-40">
-				<pre><code>{{data}}</code></pre>
 			</div>
 		</div>
 	</div>
@@ -23,41 +16,43 @@
 import TypeAhead from './TypeAhead.vue'
 import { postAutocompleteAddress } from './../api'
 export default {
+  //'onInput', 'onFocus', 'onBlur',
+  emits: ['selectItem', 'newSuggestions'],
   components: {
     TypeAhead
   },
   props: {
     apiKey: {
       type: String
+    },
+    addresses: {
+      type: Array
+    },
+    placeholder: {
+      type: String,
+      default: 'Search for an address'
+    },
+    minInputLength: {
+      type: Number,
+      default: 1
     }
   },
-	created() {
-		this.addressesFiltered = this.addresses;
-	},
 	data() {
 		return {
-			options: {
-				placeholder: 'Search for an address',
-				minInputLength: 1,
-			},
-			addresses: [],
-			addressesFiltered: [],
 			data: {
-				input: '',
-				selection: null,
+				input: ''
 			},
 		};
 	},
 	methods: {
 		selectItem(item) {
-			this.data.selection = item;
+			this.$emit('selectItem', item);
 		},
 		async onInput(event) {
 			this.data.selection = null;
 			this.data.input = event.input;
-			this.addressesFiltered = event.items;
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
-      this.addresses = newSuggestions;
+      this.$emit('newSuggestions', newSuggestions);
 		},
     async fetchFromAutocompleteAPI(userInput) {
       const newAddresses = await postAutocompleteAddress(this.apiKey, userInput)
@@ -72,9 +67,8 @@ export default {
 
 		onBlur(event) {
 			this.data.input = event.input;
-			this.addressesFiltered = event.items;
 		}
-	},
+	}
 };
 </script>
 
