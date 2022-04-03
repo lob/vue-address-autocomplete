@@ -41,7 +41,7 @@ export default {
   methods: {
     selectItem(item) {
       this.selection = item;
-		},
+    },
     addNewSuggestions(suggestedAddresses) {
       this.addresses = suggestedAddresses;
     }
