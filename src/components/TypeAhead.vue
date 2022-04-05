@@ -26,9 +26,9 @@
 				@mouseenter="currentSelectionIndex = index"
 			>
 				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-if="$slots['list-item-text']"
-					><slot name="list-item-text" :item="item" :itemProjection="itemProjection" :boldMatchText="boldMatchText"></slot
+					><slot name="list-item-text" :item="item" :itemProjection="itemProjection"></slot
 				></span>
-				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-html="boldMatchText(itemProjection(item))" v-else></span>
+				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-html="itemProjection(item)" v-else></span>
 			</div>
 			<div class="simple-typeahead-list-footer" v-if="$slots['list-footer']"><slot name="list-footer"></slot></div>
 		</div>
@@ -148,8 +148,9 @@
 				return `${this.inputId}_wrapper`;
 			},
 			filteredItems() {
-				const regexp = new RegExp(this.escapeRegExp(this.input), 'i');
-				return this.items.filter((item) => this.itemProjection(item).match(regexp));
+				// const regexp = new RegExp(this.escapeRegExp(this.input), 'i');
+				// return this.items.filter((item) => this.itemProjection(item).match(regexp));
+        return this.items
 			},
 			isListVisible() {
 				return this.isInputFocused && this.input.length >= this.minInputLength && this.filteredItems.length;
