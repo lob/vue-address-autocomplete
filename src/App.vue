@@ -1,6 +1,6 @@
 <template>
 <div>
-  <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
+  <AddressAutocomplete apiKey="live_pub_16d30adbb46a1c360ebf7d1e6b48361" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
   <div class="column column-40">
   <pre><code>{{selection}}</code></pre>
 </div>
