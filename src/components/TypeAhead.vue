@@ -27,10 +27,10 @@
 				@click="selectItem(item)"
 				@mouseenter="currentSelectionIndex = index"
 			>
-				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-if="$slots['list-item-text']"
-					><slot name="list-item-text" :item="item" :itemProjection="itemProjection"></slot
-				></span>
-				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-html="itemProjection(item)" v-else></span>
+				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item).suggestion" v-if="$slots['list-item-text']">
+					<slot name="list-item-text" :item="item" :itemProjection="itemProjection"></slot>
+				</span>
+				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item).input" v-html="itemProjection(item).suggestion" v-else></span>
 			</div>
 			<div v-if="$slots['list-footer']">
 				<slot name="list-footer"></slot>
@@ -72,12 +72,18 @@
 				default: null,
 			},
 			/**
-			 * A helper function used to modify the selected item before it is inserted into the input or rendered as a suggestion
+			 * A function that modifies item data before they are rendered as suggestions or inserted
+			 * into the input. It should return the following response:
+			 * 	suggestion - An html string for how the item should be rendered in the list of suggestions
+			 * 	input - The value to be inserted in the input if selected
 			 */
 			itemProjection: {
 				type: Function,
 				default(item) {
-					return item;
+					return {
+						suggestion: item,
+						input: item,
+					};
 				},
 			},
 			/**
@@ -116,7 +122,8 @@
 				this.$emit('onFocus', { input: this.input, items: this.filteredItems });
 			},
 			onBlur() {
-				this.isInputFocused = false;
+				// Override the input's focused status so users can click the list header
+				this.isInputFocused = true;
 				this.$emit('onBlur', { input: this.input, items: this.filteredItems });
 			},
 			onArrowDown($event) {
@@ -152,10 +159,11 @@
 				}
 			},
 			selectItem(item) {
-				this.input = this.itemProjection(item);
+				this.input = this.itemProjection(item).input;
 				this.currentSelectionIndex = 0;
 				document.getElementById(this.inputId).blur();
 				this.$emit('selectItem', item);
+				this.isInputFocused = false;
 			},
 			escapeRegExp(string) {
 				return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -195,6 +203,7 @@
 		width: 100%;
 	}
 	.simple-typeahead .simple-typeahead-list {
+		background: white;
 		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
 		border: 1px solid #DDDDDD;
 		border-radius: 4px;

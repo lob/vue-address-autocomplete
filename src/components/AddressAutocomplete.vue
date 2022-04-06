@@ -4,7 +4,7 @@
 			<div class="column column-60">
 				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions">
           <template #list-header>
-            <div class="lob-label">
+            <div class="lob-label" @click="handleClickHeader">
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 viewBox='0 0 1259 602'
@@ -63,7 +63,7 @@ export default {
 
       let boldStopIndex = 0
 
-      this.data.input.split('').forEach((inputChar) => {
+      this.input.split('').forEach((inputChar) => {
         if (
           inputChar.toLowerCase() ===
           primary_line.charAt(boldStopIndex).toLowerCase()
@@ -79,43 +79,51 @@ export default {
           `<strong>${primary_line},</strong>`
         ) : (
           `<span>
-            <strong>${primary_line.substring(0, boldStopIndex)}</strong>
-            ${primary_line.substring(boldStopIndex)},
+            <strong>${primary_line.substring(0, boldStopIndex)}</strong>${primary_line.substring(boldStopIndex)},
           </span>`
         )
 
-      return `
-        <span>
-          ${primaryLineElement}
-          <span style="color: #888;">
-            ${city},&nbsp;${state.toUpperCase()},&nbsp;${zip_code}
+      return {
+        input: `${primary_line}, ${city}, ${state.toUpperCase()}, ${zip_code}`,
+        suggestion: `
+          <span>
+            ${primaryLineElement}
+            <span style="color: #888;">
+              ${city},&nbsp;${state.toUpperCase()},&nbsp;${zip_code}
+            </span>
           </span>
-        </span>
-      `;
+        `
+      };
+    },
+    handleClickHeader() {
+      window.location.href = "https://www.lob.com/address-verification?utm_source=autocomplete&utm_medium=vue";
     },
 		selectItem(item) {
 			this.$emit('selectItem', item);
 		},
 		async onInput(event) {
-			this.data.selection = null;
-			this.data.input = event.input;
+			this.selection = null;
+			this.input = event.input;
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
       this.$emit('newSuggestions', newSuggestions);
 		},
     async fetchFromAutocompleteAPI(userInput) {
+      if (!userInput) {
+        return [];
+      }
       const newAddresses = await postAutocompleteAddress(this.apiKey, userInput)
       const newAddressJSON = await newAddresses.json()
-      const suggestions = newAddressJSON['suggestions']
+      const suggestions = newAddressJSON['suggestions'] || []
       const newSuggestions = suggestions.map((x) => ({
           value: x,
-          label: `${x.primary_line} ${x.city} ${x.state}`
+          label: `${x.primary_line} ${x.city} ${x.state} ${x.zip_code}`
         }))
 
       return newSuggestions
     },
 
 		onBlur(event) {
-			this.data.input = event.input;
+			this.input = event.input;
 		}
 	}
 };
