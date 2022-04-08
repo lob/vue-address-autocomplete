@@ -199,6 +199,7 @@
 		font-family: 'Inter', sans-serif;
 	}
 	.simple-typeahead > input {
+		box-sizing: border-box;
 		margin-bottom: 0;
 		width: 100%;
 	}
