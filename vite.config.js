@@ -24,5 +24,8 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  test: {
+    globals: true,
+  },
 })

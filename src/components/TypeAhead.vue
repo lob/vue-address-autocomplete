@@ -215,7 +215,7 @@
 		width: 100%;
 	}
 	.simple-typeahead-input-with-label {
-		padding: 2em 1em 0.5em 0.75em;
+		padding: 2em 1em 0.5em 0.75em !important;
 	}
 	.simple-typeahead .simple-typeahead-label {
 		font-size: 14px;

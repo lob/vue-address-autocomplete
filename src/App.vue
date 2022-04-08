@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       addresses: [],
-      apiKey: 'live_pub_16d30adbb46a1c360ebf7d1e6b48361',
+      apiKey: 'YOUR_API_KEY_HERE',
       apiResponse: {},
       selection: '',
       showApiResponse: false,
