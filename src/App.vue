@@ -1,7 +1,7 @@
 <template>
   <div class="column-30">
     <div class="flex-row">
-      <AddressAutocomplete class="flex-grow mr-1" :apiKey="apiKey" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
+      <AddressAutocomplete class="flex-grow mr-1" :apiKey="apiKey" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" label="Shipping Address" />
       <button @click="handleClick">Verify</button>
     </div>
     <pre>
