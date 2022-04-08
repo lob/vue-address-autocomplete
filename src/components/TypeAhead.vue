@@ -15,7 +15,9 @@
 			autocomplete="off"
 		/>
 		<div v-if="isListVisible" class="simple-typeahead-list">
-			<div class="simple-typeahead-list-header" v-if="$slots['list-header']"><slot name="list-header"></slot></div>
+			<div v-if="$slots['list-header']">
+				<slot name="list-header"></slot>
+			</div>
 			<div
 				class="simple-typeahead-list-item"
 				:class="{ 'simple-typeahead-list-item-active': currentSelectionIndex == index }"
@@ -25,12 +27,14 @@
 				@click="selectItem(item)"
 				@mouseenter="currentSelectionIndex = index"
 			>
-				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-if="$slots['list-item-text']"
-					><slot name="list-item-text" :item="item" :itemProjection="itemProjection"></slot
-				></span>
-				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item)" v-html="itemProjection(item)" v-else></span>
+				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item).suggestion" v-if="$slots['list-item-text']">
+					<slot name="list-item-text" :item="item" :itemProjection="itemProjection"></slot>
+				</span>
+				<span class="simple-typeahead-list-item-text" :data-text="itemProjection(item).input" v-html="itemProjection(item).suggestion" v-else></span>
 			</div>
-			<div class="simple-typeahead-list-footer" v-if="$slots['list-footer']"><slot name="list-footer"></slot></div>
+			<div v-if="$slots['list-footer']">
+				<slot name="list-footer"></slot>
+			</div>
 		</div>
 	</div>
 </template>
@@ -41,26 +45,50 @@
 		name: 'TypeAhead',
 		emits: ['onInput', 'onFocus', 'onBlur', 'selectItem'],
 		props: {
+			/**
+			 * DOM element identifier attached to the input
+			 */
 			id: {
 				type: String,
 			},
+			/**
+			 * Placeholder for the input value
+			 */
 			placeholder: {
 				type: String,
 				default: '',
 			},
+			/**
+			 * A list of suggestions to complete the input
+			 */
 			items: {
 				type: Array,
 				required: true,
 			},
+			/**
+			 * The default value for the input
+			 */
 			defaultItem: {
 				default: null,
 			},
+			/**
+			 * A function that modifies item data before they are rendered as suggestions or inserted
+			 * into the input. It should return the following response:
+			 * 	suggestion - An html string for how the item should be rendered in the list of suggestions
+			 * 	input - The value to be inserted in the input if selected
+			 */
 			itemProjection: {
 				type: Function,
 				default(item) {
-					return item;
+					return {
+						suggestion: item,
+						input: item,
+					};
 				},
 			},
+			/**
+			 * Minimum length of the input before displaying suggestions
+			 */
 			minInputLength: {
 				type: Number,
 				default: 2,
@@ -94,7 +122,8 @@
 				this.$emit('onFocus', { input: this.input, items: this.filteredItems });
 			},
 			onBlur() {
-				this.isInputFocused = false;
+				// Override the input's focused status so users can click the list header
+				this.isInputFocused = true;
 				this.$emit('onBlur', { input: this.input, items: this.filteredItems });
 			},
 			onArrowDown($event) {
@@ -130,10 +159,11 @@
 				}
 			},
 			selectItem(item) {
-				this.input = this.itemProjection(item);
+				this.input = this.itemProjection(item).input;
 				this.currentSelectionIndex = 0;
 				document.getElementById(this.inputId).blur();
 				this.$emit('selectItem', item);
+				this.isInputFocused = false;
 			},
 			escapeRegExp(string) {
 				return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -166,42 +196,28 @@
 	.simple-typeahead {
 		position: relative;
 		width: 100%;
+		font-family: 'Inter', sans-serif;
 	}
 	.simple-typeahead > input {
 		margin-bottom: 0;
+		width: 100%;
 	}
 	.simple-typeahead .simple-typeahead-list {
-		position: absolute;
-		width: 100%;
-		border: none;
+		background: white;
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+		border: 1px solid #DDDDDD;
+		border-radius: 4px;
 		max-height: 400px;
 		overflow-y: auto;
-		border-bottom: 0.1rem solid #d1d1d1;
+		position: absolute;
+		transform: translateY(.333rem);
+		width: 100%;
 		z-index: 9;
-	}
-	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-header {
-		background-color: #fafafa;
-		padding: 0.6rem 1rem;
-		border-bottom: 0.1rem solid #d1d1d1;
-		border-left: 0.1rem solid #d1d1d1;
-		border-right: 0.1rem solid #d1d1d1;
-	}
-	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-footer {
-		background-color: #fafafa;
-		padding: 0.6rem 1rem;
-		border-left: 0.1rem solid #d1d1d1;
-		border-right: 0.1rem solid #d1d1d1;
 	}
 	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-item {
 		cursor: pointer;
 		background-color: #fafafa;
-		padding: 0.6rem 1rem;
-		border-bottom: 0.1rem solid #d1d1d1;
-		border-left: 0.1rem solid #d1d1d1;
-		border-right: 0.1rem solid #d1d1d1;
-	}
-	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-item:last-child {
-		border-bottom: none;
+		padding: 0.5rem 1rem;
 	}
 	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-item.simple-typeahead-list-item-active {
 		background-color: #e1e1e1;

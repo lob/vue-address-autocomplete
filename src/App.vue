@@ -1,9 +1,9 @@
 <template>
-<div>
-  <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
-  <div class="column column-40">
-  <pre><code>{{selection}}</code></pre>
-</div>
+  <div style="width: 50%">
+    <AddressAutocomplete apiKey="YOUR_API_KEY_HERE" :addresses="addresses" @selectItem="selectItem" @newSuggestions="addNewSuggestions" />
+    <div class="column column-40">
+      <pre><code>{{selection}}</code></pre>
+    </div>
   </div>
 </template>
 
