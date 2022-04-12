@@ -1,8 +1,12 @@
 <template>
 	<div :id="wrapperId" class="simple-typeahead">
+		<div v-if="label" class="simple-typeahead-label">
+			{{label}}
+		</div>
 		<input
 			:id="inputId"
 			class="simple-typeahead-input"
+			:class="label && 'simple-typeahead-input-with-label'"
 			type="text"
 			:placeholder="placeholder"
 			v-model="input"
@@ -96,6 +100,10 @@
 					return prop >= 0;
 				},
 			},
+			label: {
+				type: String,
+				default: null
+			}
 		},
 		mounted() {
 			if (this.defaultItem !== undefined && this.defaultItem !== null) {
@@ -199,8 +207,23 @@
 		font-family: 'Inter', sans-serif;
 	}
 	.simple-typeahead > input {
+    border: 1px #bbbbbb solid;
+		border-radius: 4px;
+		box-sizing: border-box;
 		margin-bottom: 0;
+		padding: .25em;
 		width: 100%;
+	}
+	.simple-typeahead-input-with-label {
+		padding: 2em 1em 0.5em 0.75em !important;
+	}
+	.simple-typeahead .simple-typeahead-label {
+		font-size: 14px;
+		font-weight: 400;
+		color: #949494;
+		position: absolute;
+    left: 1em;
+    top: 0.5em;
 	}
 	.simple-typeahead .simple-typeahead-list {
 		background: white;

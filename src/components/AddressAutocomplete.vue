@@ -2,7 +2,7 @@
 	<div class="demo">
 		<div class="row">
 			<div class="column column-60">
-				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions">
+				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-bind="$attrs">
           <template #list-header>
             <div class="lob-label" @click="handleClickHeader">
               <svg
