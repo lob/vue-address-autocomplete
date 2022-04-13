@@ -38,9 +38,6 @@ export default {
     apiKey: {
       type: String
     },
-    addresses: {
-      type: Array
-    },
     placeholder: {
       type: String,
       default: 'Search for an address'
@@ -53,6 +50,7 @@ export default {
 	data() {
 		return {
 			data: {
+        addresses: [],
 				input: ''
 			},
 		};
@@ -105,7 +103,9 @@ export default {
 			this.selection = null;
 			this.input = event.input;
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
+      this.addresses = newSuggestions;
       this.$emit('newSuggestions', newSuggestions);
+      this.$forceUpdate();
 		},
     async fetchFromAutocompleteAPI(userInput) {
       if (!userInput) {
