@@ -188,9 +188,13 @@
 			filteredItems() {
 				// const regexp = new RegExp(this.escapeRegExp(this.input), 'i');
 				// return this.items.filter((item) => this.itemProjection(item).match(regexp));
-        return this.items
+        return this.items || []
 			},
 			isListVisible() {
+				console.log('this.input', this.input);
+				console.log('this.filteredItems', this.filteredItems);
+
+
 				return this.isInputFocused && this.input.length >= this.minInputLength && this.filteredItems.length;
 			},
 			currentSelection() {
@@ -241,6 +245,7 @@
 		cursor: pointer;
 		background-color: #fafafa;
 		padding: 0.5rem 1rem;
+		text-align: left;
 	}
 	.simple-typeahead .simple-typeahead-list .simple-typeahead-list-item.simple-typeahead-list-item-active {
 		background-color: #e1e1e1;
