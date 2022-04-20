@@ -30,7 +30,7 @@ import TypeAhead from './TypeAhead.vue'
 import { postAutocompleteAddress } from './../api'
 export default {
   //'onInput', 'onFocus', 'onBlur',
-  emits: ['selectItem', 'newSuggestions'],
+  emits: ['selectItem', 'newSuggestions', 'onError', 'onInput'],
   components: {
     TypeAhead
   },
@@ -102,17 +102,25 @@ export default {
 		async onInput(event) {
 			this.selection = null;
 			this.input = event.input;
+      this.$emit('onInput')
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
       this.addresses = newSuggestions;
       this.$emit('newSuggestions', newSuggestions);
       this.$forceUpdate();
 		},
     async fetchFromAutocompleteAPI(userInput) {
-      if (!userInput) {
+      // Allow empty inputs from test cases
+      if (!userInput && process.env.NODE_ENV !== 'test') {
         return [];
       }
+
       const newAddresses = await postAutocompleteAddress(this.apiKey, userInput)
       const newAddressJSON = await newAddresses.json()
+
+      if (newAddressJSON.error) {
+        this.$emit('onError', newAddressJSON.error)
+      }
+
       const suggestions = newAddressJSON['suggestions'] || []
       const newSuggestions = suggestions.map((x) => ({
           value: x,
