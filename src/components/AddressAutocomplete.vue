@@ -15,7 +15,7 @@
                   fill='#0099d7'
                 />
               </svg>
-              <span class="lob-gray-text">Deliverable addresses</span>
+              <span class="lob-header">Deliverable addresses</span>
               <a href="https://www.lob.com/address-verification?utm_source=autocomplete&utm_medium=vue">Learn more</a>
             </div>
           </template>
@@ -138,17 +138,12 @@ export default {
 </script>
 
 <style scoped>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  :root {
+    --lob-header-text-color: #888;
   }
 
-	.lob-gray-text {
-		color: #888;
+	.lob-header {
+		color: var(--lob-header-text-color);
 		text-decoration: inherit;
 	}
 
@@ -163,7 +158,7 @@ export default {
 
 	.lob-label > a {
 		font-weight: 600;
-		color: #0699D6;
+		color: #0699D655;
 		text-decoration: inherit;
 	}
 
