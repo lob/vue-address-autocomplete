@@ -40,7 +40,7 @@ describe('Autocomplete', () => {
 
         // Verify suggestion renderings
         const suggestions = wrapper.findAll('div').filter(element =>
-            element.classes().includes("simple-typeahead-list-item")
+            element.classes().includes("lob-typeahead-list-item")
         )
 
         expect(suggestions).toHaveLength(3)
@@ -76,7 +76,7 @@ describe('Autocomplete', () => {
         await flushPromises()
 
         // Trigger selection, selects 2nd option because the first has an additional class
-        await wrapper.find('[class="simple-typeahead-list-item"]').trigger('click')
+        await wrapper.find('[class="lob-typeahead-list-item"]').trigger('click')
 
         expect(Object.keys(wrapper.emitted())).toContain('selectItem')
         expect(wrapper.emitted().selectItem).toHaveLength(1)
