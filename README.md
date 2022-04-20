@@ -14,6 +14,14 @@
 npm install --save @lob/vue-address-autocomplete
 ```
 
+Make sure to include our component styles in your js entry point or at the component level:
+
+```javascript
+# inside main.js or component file
+import '@lob/vue-address-autocomplete/dist/styles.css';
+```
+
+
 ## Address Autocomplete Search Bar Demo Code 
 
 ```javascript
