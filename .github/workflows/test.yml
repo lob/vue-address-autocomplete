@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['14', '16']
+        node: ['16']
     steps:
     - uses: actions/checkout@v2
     - name: Setup
@@ -19,8 +19,6 @@ jobs:
       run: mkdir .nyc_output
     - name: Install Dependencies
       run: npm install
-    - name: Install c8
-      run: npm install -g c8
     - name: Run tests
       run: npm run test
     - name: Coverage
