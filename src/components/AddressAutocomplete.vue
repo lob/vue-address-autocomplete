@@ -27,7 +27,7 @@
 
 <script>
 import TypeAhead from './TypeAhead.vue'
-import { postAutocompleteAddress } from './../api'
+import { postAutocompleteAddress, postAutocompleteInternationalAddress } from './../api'
 export default {
   //'onInput', 'onFocus', 'onBlur',
   emits: ['selectItem', 'newSuggestions', 'onError', 'onInput'],
@@ -37,6 +37,14 @@ export default {
   props: {
     apiKey: {
       type: String
+    },
+    country: {
+      type: String,
+      default: 'US'
+    },
+    isInternational: {
+      type: Boolean,
+      default: false
     },
     placeholder: {
       type: String,
@@ -114,7 +122,14 @@ export default {
         return [];
       }
 
-      const newAddresses = await postAutocompleteAddress(this.apiKey, userInput)
+      // International autocomplete requires min length of 3
+      if (this.isInternational && userInput.length < 3) {
+        return [];
+      }
+
+      const newAddresses = this.isInternational
+        ? await postAutocompleteInternationalAddress(this.apiKey, userInput, this.country)
+        : await postAutocompleteAddress(this.apiKey, userInput)
       const newAddressJSON = await newAddresses.json()
 
       if (newAddressJSON.error) {
@@ -158,7 +173,7 @@ export default {
 
 	.lob-label > a {
 		font-weight: 600;
-		color: #0699D655;
+		color: #0699D6;
 		text-decoration: inherit;
 	}
 

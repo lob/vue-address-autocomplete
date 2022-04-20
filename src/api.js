@@ -23,6 +23,30 @@ export const postAutocompleteAddress = (
     return fetch(url, init)
 }
 
+export const postAutocompleteInternationalAddress = (
+    apiKey,
+    addressPrefix,
+    country,
+    additionalAddressData
+) => {
+    const url =
+        'https://api.lob.com/v1/intl_autocompletions'
+    const init = {
+        method: 'POST',
+        headers: {
+            Authorization: `Basic ${base64.encode(apiKey + ':')}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            address_prefix: addressPrefix,
+            country,
+            ...additionalAddressData
+        })
+    }
+
+    return fetch(url, init)
+}
+
 export const postVerifyAddress = (apiKey, address) => {
     const payload = typeof address === 'string' ? { address } : address
     const url = 'https://api.lob.com/v1/us_verifications'
