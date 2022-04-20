@@ -11,6 +11,11 @@ export default defineConfig({
       name: "@lob/vue-address-autocomplete",
       fileName: (format) => `@lob/vue-address-autocomplete.${format}.js`
     },
+    test: {
+      coverage: {
+        reporter: ['lcov', 'text-summary']
+      }
+    },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
