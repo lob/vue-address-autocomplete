@@ -224,10 +224,20 @@
 		border-radius: 4px;
 		box-sizing: border-box;
 		color: var(--lob-input-text-color);
+		font-weight: bold;
 		margin-bottom: 0;
 		padding: .25em;
 		width: 100%;
 	}
+
+	.lob-typeahead-input:focus-visible {
+		outline: solid 1px black;
+	}
+
+	.lob-typeahead-input::placeholder {
+		font-weight: normal;
+	}
+
 	.lob-typeahead-input-with-label {
 		padding: 2em 1em 0.5em 0.75em !important;
 	}
