@@ -15,7 +15,7 @@
                   fill='#0099d7'
                 />
               </svg>
-              <span class="lob-gray-text">Deliverable addresses</span>
+              <span class="lob-header">Deliverable addresses</span>
               <a href="https://www.lob.com/address-verification?utm_source=autocomplete&utm_medium=vue">Learn more</a>
             </div>
           </template>
@@ -27,16 +27,24 @@
 
 <script>
 import TypeAhead from './TypeAhead.vue'
-import { postAutocompleteAddress } from './../api'
+import { postAutocompleteAddress, postAutocompleteInternationalAddress } from './../api'
 export default {
   //'onInput', 'onFocus', 'onBlur',
-  emits: ['selectItem', 'newSuggestions'],
+  emits: ['selectItem', 'newSuggestions', 'onError', 'onInput'],
   components: {
     TypeAhead
   },
   props: {
     apiKey: {
       type: String
+    },
+    country: {
+      type: String,
+      default: 'US'
+    },
+    isInternational: {
+      type: Boolean,
+      default: false
     },
     placeholder: {
       type: String,
@@ -102,17 +110,32 @@ export default {
 		async onInput(event) {
 			this.selection = null;
 			this.input = event.input;
+      this.$emit('onInput')
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
       this.addresses = newSuggestions;
       this.$emit('newSuggestions', newSuggestions);
       this.$forceUpdate();
 		},
     async fetchFromAutocompleteAPI(userInput) {
-      if (!userInput) {
+      // Allow empty inputs from test cases
+      if (!userInput && process.env.NODE_ENV !== 'test') {
         return [];
       }
-      const newAddresses = await postAutocompleteAddress(this.apiKey, userInput)
+
+      // International autocomplete requires min length of 3
+      if (this.isInternational && userInput.length < 3) {
+        return [];
+      }
+
+      const newAddresses = this.isInternational
+        ? await postAutocompleteInternationalAddress(this.apiKey, userInput, this.country)
+        : await postAutocompleteAddress(this.apiKey, userInput)
       const newAddressJSON = await newAddresses.json()
+
+      if (newAddressJSON.error) {
+        this.$emit('onError', newAddressJSON.error)
+      }
+
       const suggestions = newAddressJSON['suggestions'] || []
       const newSuggestions = suggestions.map((x) => ({
           value: x,
@@ -130,17 +153,12 @@ export default {
 </script>
 
 <style scoped>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  :root {
+    --lob-header-text-color: #888;
   }
 
-	.lob-gray-text {
-		color: #888;
+	.lob-header {
+		color: var(--lob-header-text-color);
 		text-decoration: inherit;
 	}
 
