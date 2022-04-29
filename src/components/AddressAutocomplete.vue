@@ -4,7 +4,7 @@
 			<div class="column column-60">
 				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-bind="$attrs">
           <template #list-header>
-            <div class="lob-label" @click="handleClickHeader">
+            <div class="lob-label" @click="handleClickHeader" @mousedown.prevent>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 viewBox='0 0 1259 602'
@@ -29,8 +29,8 @@
 import TypeAhead from './TypeAhead.vue'
 import { postAutocompleteAddress, postAutocompleteInternationalAddress } from './../api'
 export default {
-  //'onInput', 'onFocus', 'onBlur',
-  emits: ['selectItem', 'newSuggestions', 'onError', 'onInput'],
+  //'onInput', 'onFocus', 'onBlur', 'onSelectAddress', 'onSuggestions'
+  emits: ['onSelectAddress', 'onSuggestions', 'onError', 'onInput'],
   components: {
     TypeAhead
   },
@@ -53,6 +53,22 @@ export default {
     minInputLength: {
       type: Number,
       default: 1
+    },
+    /**
+     * When true the input will only update to the primary line of a suggested address
+     */
+    primaryLineOnly: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  mounted() {
+    // Check if parent compeont is listening to deprecated events. Note that listeners are prefixed with 'on'
+    if (this.$attrs.onSelectItem) {
+      console.warn("[@lob/vue-address-autocomplete] Event 'selectItem' has been deprecated for AddressAutocomplete, please use 'onSelect' instead")
+    }
+    if (this.$attrs.onNewSuggestions) {
+      console.warn("[@lob/vue-address-autocomplete] Event 'newSuggestions' has been deprecated for AddressAutocomplete, please use 'onSuggestions' instead")
     }
   },
 	data() {
@@ -90,7 +106,7 @@ export default {
         )
 
       return {
-        input: `${primary_line}, ${city}, ${state.toUpperCase()}, ${zip_code}`,
+        input: this.primaryLineOnly ? primary_line : `${primary_line}, ${city}, ${state.toUpperCase()}, ${zip_code}`,
         suggestion: `
           <span>
             ${primaryLineElement}
@@ -105,15 +121,17 @@ export default {
       window.location.href = "https://www.lob.com/address-verification?utm_source=autocomplete&utm_medium=vue";
     },
 		selectItem(item) {
-			this.$emit('selectItem', item);
+      this.$emit('onSelect', item);
+			this.$emit('selectItem', item); // deprecated
 		},
 		async onInput(event) {
 			this.selection = null;
 			this.input = event.input;
-      this.$emit('onInput')
+      this.$emit('onInput', this.input)
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
       this.addresses = newSuggestions;
-      this.$emit('newSuggestions', newSuggestions);
+      this.$emit('onSuggestions', newSuggestions);
+      this.$emit('newSuggestions', newSuggestions);  // deprecated
       this.$forceUpdate();
 		},
     async fetchFromAutocompleteAPI(userInput) {

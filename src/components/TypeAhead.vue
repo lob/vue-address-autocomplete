@@ -130,8 +130,7 @@
 				this.$emit('onFocus', { input: this.input, items: this.filteredItems });
 			},
 			onBlur() {
-				// Override the input's focused status so users can click the list header
-				this.isInputFocused = true;
+				this.isInputFocused = false;
 				this.$emit('onBlur', { input: this.input, items: this.filteredItems });
 			},
 			onArrowDown($event) {
