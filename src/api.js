@@ -4,10 +4,12 @@ import base64 from 'base-64'
 export const postAutocompleteAddress = (
     apiKey,
     addressPrefix,
+    isStaging = false,
     additionalAddressData
 ) => {
+    const domain = isStaging ? 'lob-staging' : 'lob';
     const url =
-        'https://api.lob.com/v1/us_autocompletions?valid_addresses=true&case=proper'
+        `https://api.${domain}.com/v1/us_autocompletions?valid_addresses=true&case=proper`
     const init = {
         method: 'POST',
         headers: {
@@ -27,10 +29,12 @@ export const postAutocompleteInternationalAddress = (
     apiKey,
     addressPrefix,
     country,
+    isStaging = false,
     additionalAddressData
 ) => {
+    const domain = isStaging ? 'lob-staging' : 'lob';
     const url =
-        'https://api.lob.com/v1/intl_autocompletions'
+        `https://api.${domain}.com/v1/intl_autocompletions`
     const init = {
         method: 'POST',
         headers: {
@@ -47,9 +51,10 @@ export const postAutocompleteInternationalAddress = (
     return fetch(url, init)
 }
 
-export const postVerifyAddress = (apiKey, address) => {
+export const postVerifyAddress = (apiKey, address, isStaging = false) => {
     const payload = typeof address === 'string' ? { address } : address
-    const url = 'https://api.lob.com/v1/us_verifications'
+    const domain = isStaging ? 'lob-staging' : 'lob'
+    const url = `https://api.${domain}.com/v1/us_verifications`
     const init = {
         method: 'POST',
         headers: {
@@ -65,9 +70,11 @@ export const postVerifyAddress = (apiKey, address) => {
 export const postVerifyInternationalAddress = (
     apiKey,
     address,
-    countryCode
+    countryCode,
+    isStaging = false
 ) => {
-    const url = 'https://api.lob.com/v1/intl_verifications'
+    const domain = isStaging ? 'lob-staging' : 'lob'
+    const url = `https://api.${domain}.com/v1/intl_verifications`
     const init = {
         method: 'POST',
         headers: {

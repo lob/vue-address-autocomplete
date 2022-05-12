@@ -35,6 +35,14 @@ export default {
     TypeAhead
   },
   props: {
+    /**
+     * Address components for more specific suggestions. Primarily used when primaryLineOnly is
+     * true and for US autocomplete only
+     */
+    address: {
+      type: Object,
+      default: {}
+    },
     apiKey: {
       type: String
     },
@@ -43,6 +51,10 @@ export default {
       default: 'US'
     },
     isInternational: {
+      type: Boolean,
+      default: false
+    },
+    isStaging: {
       type: Boolean,
       default: false
     },
@@ -146,8 +158,8 @@ export default {
       }
 
       const newAddresses = this.isInternational
-        ? await postAutocompleteInternationalAddress(this.apiKey, userInput, this.country)
-        : await postAutocompleteAddress(this.apiKey, userInput)
+        ? await postAutocompleteInternationalAddress(this.apiKey, userInput, this.country, this.isStaging)
+        : await postAutocompleteAddress(this.apiKey, userInput, this.isStaging, this.address)
       const newAddressJSON = await newAddresses.json()
 
       if (newAddressJSON.error) {

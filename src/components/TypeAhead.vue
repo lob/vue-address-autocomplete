@@ -1,12 +1,12 @@
 <template>
 	<div :id="wrapperId" class="lob-typeahead-root">
-		<div v-if="label" class="lob-typeahead-label">
+		<div v-if="label" class="lob-typeahead-label" :class="!isLabelFloating ? 'lob-typeahead-label-absolute' : 'lob-typeahead-label-floating'">
 			{{label}}
 		</div>
 		<input
 			:id="inputId"
 			class="lob-typeahead-input"
-			:class="label && 'lob-typeahead-input-with-label'"
+			:class="label && !isLabelFloating && 'lob-typeahead-input-with-label'"
 			type="text"
 			:placeholder="placeholder"
 			v-model="input"
@@ -103,6 +103,10 @@
 			label: {
 				type: String,
 				default: null
+			},
+			isLabelFloating: {
+				type: Boolean,
+				default: false
 			}
 		},
 		mounted() {
@@ -244,9 +248,14 @@
 		font-size: 14px;
 		font-weight: 400;
 		color: var(--lob-label-text-color);
+	}
+	.lob-typeahead-label-absolute {
 		position: absolute;
     left: 1em;
     top: 0.5em;
+	}
+	.lob-typeahead-label-floating {
+		margin-bottom: 0.5rem;
 	}
 	.lob-typeahead-list {
 		background: var(--lob-suggestion-item-background-color);
