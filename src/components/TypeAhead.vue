@@ -1,15 +1,15 @@
 <template>
 	<div :id="wrapperId" class="lob-typeahead-root">
-		<div v-if="label" class="lob-typeahead-label" :class="!isLabelFloating ? 'lob-typeahead-label-absolute' : 'lob-typeahead-label-floating'">
+		<label :for="inputId" v-if="label" class="lob-typeahead-label" :class="!isLabelFloating ? 'lob-typeahead-label-absolute' : 'lob-typeahead-label-floating'">
 			{{label}}
-		</div>
+		</label>
 		<input
 			:id="inputId"
 			class="lob-typeahead-input"
 			:class="label && !isLabelFloating && 'lob-typeahead-input-with-label'"
 			type="text"
 			:placeholder="placeholder"
-			v-model="input"
+			v-model="modelValue"
 			@input="onInput"
 			@focus="onFocus"
 			@blur="onBlur"
@@ -104,6 +104,10 @@
 				type: String,
 				default: null
 			},
+			modelValue: {
+				type: String,
+				default: ''
+			},
 			isLabelFloating: {
 				type: Boolean,
 				default: false
@@ -117,25 +121,25 @@
 		data() {
 			return {
 				inputId: this.id || `simple_typeahead_${(Math.random() * 1000).toFixed()}`,
-				input: '',
 				isInputFocused: false,
 				currentSelectionIndex: 0,
 			};
 		},
 		methods: {
-			onInput() {
+			onInput(e) {
 				if (this.isListVisible && this.currentSelectionIndex >= this.filteredItems.length) {
 					this.currentSelectionIndex = (this.filteredItems.length || 1) - 1;
 				}
-				this.$emit('onInput', { input: this.input, items: this.filteredItems });
+				this.$emit('onInput', { input: this.modelValue, items: this.filteredItems });
+				this.$emit('update:modelValue', e.target.value)
 			},
 			onFocus() {
 				this.isInputFocused = true;
-				this.$emit('onFocus', { input: this.input, items: this.filteredItems });
+				this.$emit('onFocus', { input: this.modelValue, items: this.filteredItems });
 			},
 			onBlur() {
 				this.isInputFocused = false;
-				this.$emit('onBlur', { input: this.input, items: this.filteredItems });
+				this.$emit('onBlur', { input: this.modelValue, items: this.filteredItems });
 			},
 			onArrowDown($event) {
 				if (this.isListVisible && this.currentSelectionIndex < this.filteredItems.length - 1) {
@@ -171,7 +175,7 @@
 			},
 			selectItem(item) {
 				this.$emit('selectItem', item);
-				this.input = this.itemProjection(item).input;
+				this.$emit('update:modelValue', this.itemProjection(item).input);
 				this.currentSelectionIndex = 0;
 				document.getElementById(this.inputId)?.blur();
 				this.isInputFocused = false;
@@ -180,7 +184,7 @@
 				return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 			},
 			boldMatchText(text) {
-				const regexp = new RegExp(`(${this.escapeRegExp(this.input)})`, 'ig');
+				const regexp = new RegExp(`(${this.escapeRegExp(this.modelValue)})`, 'ig');
 				return text.replace(regexp, '<strong>$1</strong>');
 			},
 		},
@@ -189,13 +193,13 @@
 				return `${this.inputId}_wrapper`;
 			},
 			filteredItems() {
-				// const regexp = new RegExp(this.escapeRegExp(this.input), 'i');
+				// const regexp = new RegExp(this.escapeRegExp(this.modelValue), 'i');
 				// return this.items.filter((item) => this.itemProjection(item).match(regexp));
         return this.items || []
 			},
 			isListVisible() {
 				// Allow empty inputs from test cases
-				const isInputValid = process.env.NODE_ENV === 'test' || this.input.length >= this.minInputLength
+				const isInputValid = process.env.NODE_ENV === 'test' || this.modelValue.length >= this.minInputLength
 				return this.isInputFocused && isInputValid && this.filteredItems.length;
 			},
 			currentSelection() {

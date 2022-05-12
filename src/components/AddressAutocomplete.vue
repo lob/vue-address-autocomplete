@@ -157,6 +157,14 @@ export default {
         return [];
       }
 
+      if ('primary_line' in this.address) {
+        delete this.address.primary_line;
+      }
+
+      if ('secondary_line' in this.address) {
+        delete this.address.secondary_line;
+      }
+
       const newAddresses = this.isInternational
         ? await postAutocompleteInternationalAddress(this.apiKey, userInput, this.country, this.isStaging)
         : await postAutocompleteAddress(this.apiKey, userInput, this.isStaging, this.address)
