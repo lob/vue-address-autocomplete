@@ -9,13 +9,13 @@
 			:class="label && !isLabelFloating && 'lob-typeahead-input-with-label'"
 			type="text"
 			:placeholder="placeholder"
-			v-model="modelValue"
+			v-model="inputValue"
 			@input="onInput"
 			@focus="onFocus"
 			@blur="onBlur"
 			@keydown.down.prevent="onArrowDown"
 			@keydown.up.prevent="onArrowUp"
-			@keydown.enter.tab.prevent="selectCurrentSelection"
+			@keydown.enter.tab="selectCurrentSelection"
 			autocomplete="off"
 		/>
 		<div v-if="isListVisible" class="lob-typeahead-list">
@@ -47,7 +47,7 @@
 	import { defineComponent } from 'vue';
 	export default defineComponent({
 		name: 'TypeAhead',
-		emits: ['onInput', 'onFocus', 'onBlur', 'selectItem'],
+		emits: ['onInput', 'onFocus', 'onBlur', 'selectItem', 'update:modelValue'],
 		props: {
 			/**
 			 * DOM element identifier attached to the input
@@ -157,6 +157,10 @@
 				setTimeout(() => {
 					const list_node = document.querySelector(`#${this.wrapperId} .lob-typeahead-list`);
 					const active_node = document.querySelector(`#${this.wrapperId} .lob-typeahead-list-item.lob-typeahead-list-item-active`);
+					if (!active_node) {
+						return;
+					}
+
 					if (!(active_node.offsetTop >= list_node.scrollTop && active_node.offsetTop + active_node.offsetHeight < list_node.scrollTop + list_node.offsetHeight)) {
 						let scroll_to = 0;
 						if (active_node.offsetTop > list_node.scrollTop) {
@@ -205,6 +209,14 @@
 			currentSelection() {
 				return this.isListVisible && this.currentSelectionIndex < this.filteredItems.length ? this.filteredItems[this.currentSelectionIndex] : undefined;
 			},
+			inputValue: {
+				get() {
+					return this.modelValue
+				},
+				set(newValue) {
+					this.$emit('update:modelValue', newValue)
+				}
+			}
 		},
 	});
 </script>
@@ -259,6 +271,7 @@
     top: 0.5em;
 	}
 	.lob-typeahead-label-floating {
+		display: block;
 		margin-bottom: 0.5rem;
 	}
 	.lob-typeahead-list {
@@ -270,7 +283,8 @@
 		overflow-y: auto;
 		position: absolute;
 		transform: translateY(.333rem);
-		width: 100%;
+		white-space: nowrap;
+		min-width: 100%;
 		z-index: 9;
 	}
 	.lob-typeahead-list-item {

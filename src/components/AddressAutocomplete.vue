@@ -2,7 +2,7 @@
 	<div class="demo">
 		<div class="row">
 			<div class="column column-60">
-				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-bind="$attrs">
+				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-model="input" v-bind="$attrs">
           <template #list-header>
             <div class="lob-label" @click="handleClickHeader" @mousedown.prevent>
               <svg
@@ -29,8 +29,8 @@
 import TypeAhead from './TypeAhead.vue'
 import { postAutocompleteAddress, postAutocompleteInternationalAddress } from './../api'
 export default {
-  //'onInput', 'onFocus', 'onBlur', 'onSelectAddress', 'onSuggestions'
-  emits: ['onSelectAddress', 'onSuggestions', 'onError', 'onInput'],
+  //'onInput', 'onFocus', 'onBlur', 'onSelect', 'onSuggestions'
+  emits: ['onSelect', 'onSuggestions', 'onError', 'onInput'],
   components: {
     TypeAhead
   },
@@ -77,18 +77,16 @@ export default {
   mounted() {
     // Check if parent compeont is listening to deprecated events. Note that listeners are prefixed with 'on'
     if (this.$attrs.onSelectItem) {
-      console.warn("[@lob/vue-address-autocomplete] Event 'selectItem' has been deprecated for AddressAutocomplete, please use 'onSelect' instead")
+      console.error("[@lob/vue-address-autocomplete] Event 'selectItem' has been removed for AddressAutocomplete, please use 'onSelect' instead")
     }
     if (this.$attrs.onNewSuggestions) {
-      console.warn("[@lob/vue-address-autocomplete] Event 'newSuggestions' has been deprecated for AddressAutocomplete, please use 'onSuggestions' instead")
+      console.error("[@lob/vue-address-autocomplete] Event 'newSuggestions' has been removed for AddressAutocomplete, please use 'onSuggestions' instead")
     }
   },
 	data() {
 		return {
-			data: {
-        addresses: [],
-				input: ''
-			},
+      addresses: [],
+      input: ''
 		};
 	},
 	methods: {
@@ -134,7 +132,6 @@ export default {
     },
 		selectItem(item) {
       this.$emit('onSelect', item);
-			this.$emit('selectItem', item); // deprecated
 		},
 		async onInput(event) {
 			this.selection = null;
@@ -143,7 +140,6 @@ export default {
       const newSuggestions = await this.fetchFromAutocompleteAPI(event.input);
       this.addresses = newSuggestions;
       this.$emit('onSuggestions', newSuggestions);
-      this.$emit('newSuggestions', newSuggestions);  // deprecated
       this.$forceUpdate();
 		},
     async fetchFromAutocompleteAPI(userInput) {
@@ -213,6 +209,7 @@ export default {
 		font-weight: 600;
 		color: #0699D6;
 		text-decoration: inherit;
+    margin-left: 12px;
 	}
 
 	.lob-label > span {
