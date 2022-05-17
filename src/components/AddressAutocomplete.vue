@@ -2,7 +2,7 @@
 	<div class="demo">
 		<div class="row">
 			<div class="column column-60">
-				<TypeAhead :items="addresses" :placeholder="placeholder" @selectItem="selectItem" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-model="input" v-bind="$attrs">
+				<TypeAhead :items="addresses" :placeholder="placeholder" @onInput="onInput" @onBlur="onBlur" :minInputLength="minInputLength" :itemProjection="formatSuggestions" v-model="input" v-bind="$attrs">
           <template #list-header>
             <div class="lob-label" @click="handleClickHeader" @mousedown.prevent>
               <svg
@@ -29,8 +29,8 @@
 import TypeAhead from './TypeAhead.vue'
 import { postAutocompleteAddress, postAutocompleteInternationalAddress } from './../api'
 export default {
-  //'onInput', 'onFocus', 'onBlur', 'onSelect', 'onSuggestions'
-  emits: ['onSelect', 'onSuggestions', 'onError', 'onInput'],
+  //'onInput', 'onFocus', 'onBlur', 'onSuggestions'
+  emits: ['onSuggestions', 'onError', 'onInput'],
   components: {
     TypeAhead
   },
@@ -130,9 +130,6 @@ export default {
     handleClickHeader() {
       window.location.href = "https://www.lob.com/address-verification?utm_source=autocomplete&utm_medium=vue";
     },
-		selectItem(item) {
-      this.$emit('onSelect', item);
-		},
 		async onInput(event) {
 			this.selection = null;
 			this.input = event.input;
