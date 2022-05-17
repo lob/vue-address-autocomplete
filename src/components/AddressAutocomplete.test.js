@@ -12,6 +12,7 @@ import {
 import AddressAutocomplete from './AddressAutocomplete.vue'
 
 const mockPost = vi.fn()
+const handleSelect = vi.fn()
 
 global.fetch = mockPost
 
@@ -67,7 +68,10 @@ describe('Autocomplete', () => {
         )
 
         const wrapper = mount(AddressAutocomplete, {
-            data: () => ({ addresses: [] })
+            data: () => ({ addresses: [] }),
+            attrs: {
+                onOnSelect: handleSelect
+            }
         })
 
         // Trigger suggestion options
@@ -78,19 +82,16 @@ describe('Autocomplete', () => {
         // Trigger selection, selects 2nd option because the first has an additional class
         await wrapper.find('[class="lob-typeahead-list-item"]').trigger('click')
 
-        expect(Object.keys(wrapper.emitted())).toContain('onSelect')
-        expect(wrapper.emitted().onSelect).toHaveLength(1)
-        expect(wrapper.emitted().onSelect[0]).toEqual(
-            [{
-                label: "123 Bowser's Castle Mushroom Kingdom JA 12345",
-                value: {
-                    primary_line: "123 Bowser's Castle",
-                    city: 'Mushroom Kingdom',
-                    state: 'JA',
-                    zip_code: '12345'
-                }
-            }]
-        )
+        expect(handleSelect).toHaveBeenCalledOnce()
+        expect(handleSelect).toHaveBeenCalledWith({
+            label: "123 Bowser's Castle Mushroom Kingdom JA 12345",
+            value: {
+                primary_line: "123 Bowser's Castle",
+                city: 'Mushroom Kingdom',
+                state: 'JA',
+                zip_code: '12345'
+            }
+        })
     })
 
     it('handles errors as expected', async() => {
