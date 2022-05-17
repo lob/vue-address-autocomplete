@@ -35,7 +35,7 @@ import '@lob/vue-address-autocomplete/dist/styles.css';
 </template>
 
 <script>
-import AddressAutocomplete from @lob/vue-address-autocomplete'
+import AddressAutocomplete from '@lob/vue-address-autocomplete'
 export default {
   components: {
     AddressAutocomplete
