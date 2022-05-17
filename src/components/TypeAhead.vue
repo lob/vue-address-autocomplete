@@ -47,7 +47,7 @@
 	import { defineComponent } from 'vue';
 	export default defineComponent({
 		name: 'TypeAhead',
-		emits: ['onInput', 'onFocus', 'onBlur', 'selectItem', 'update:modelValue'],
+		emits: ['onInput', 'onFocus', 'onBlur', 'onSelect', 'update:modelValue'],
 		props: {
 			/**
 			 * DOM element identifier attached to the input
@@ -178,8 +178,8 @@
 				}
 			},
 			selectItem(item) {
-				this.$emit('selectItem', item);
 				this.$emit('update:modelValue', this.itemProjection(item).input);
+				this.$emit('onSelect', item);
 				this.currentSelectionIndex = 0;
 				document.getElementById(this.inputId)?.blur();
 				this.isInputFocused = false;
