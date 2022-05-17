@@ -78,9 +78,9 @@ describe('Autocomplete', () => {
         // Trigger selection, selects 2nd option because the first has an additional class
         await wrapper.find('[class="lob-typeahead-list-item"]').trigger('click')
 
-        expect(Object.keys(wrapper.emitted())).toContain('selectItem')
-        expect(wrapper.emitted().selectItem).toHaveLength(1)
-        expect(wrapper.emitted().selectItem[0]).toEqual(
+        expect(Object.keys(wrapper.emitted())).toContain('onSelect')
+        expect(wrapper.emitted().onSelect).toHaveLength(1)
+        expect(wrapper.emitted().onSelect[0]).toEqual(
             [{
                 label: "123 Bowser's Castle Mushroom Kingdom JA 12345",
                 value: {
