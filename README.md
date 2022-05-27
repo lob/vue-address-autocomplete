@@ -59,9 +59,9 @@ export default {
 ```
 
 ## Additional Resources
-Blog with more demos(https://www.lob.com/blog/address-autocomplete-and-verification-with-lobs-vue-component-library)
+[Blog with more demos](https://www.lob.com/blog/address-autocomplete-and-verification-with-lobs-vue-component-library)
 
-Youtube demo(https://www.youtube.com/watch?v=WnTvZeT_3hw)
+[Youtube demo](https://www.youtube.com/watch?v=WnTvZeT_3hw)
 ## How to Build and publish
 
 Run 
