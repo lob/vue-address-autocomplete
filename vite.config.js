@@ -9,7 +9,8 @@ export default defineConfig({
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
             name: "@lob/vue-address-autocomplete",
-            fileName: (format) => `@lob/vue-address-autocomplete.${format}.js`
+            fileName: (format) => `@lob/vue-address-autocomplete.${format}.js`,
+            cssFileName: 'style'
         },
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled
