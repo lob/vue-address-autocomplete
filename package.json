@@ -30,6 +30,7 @@
     "url": "git+https://github.com/lob/vue-address-autocomplete.git"
   },
   "dependencies": {
+    "@vitest/coverage-v8": "^4.1.11",
     "base-64": "^1.0.0",
     "path": "^0.12.7",
     "vue": "^3.2.25"
